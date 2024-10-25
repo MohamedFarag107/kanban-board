@@ -55,7 +55,7 @@ export class CreateMemberDto {
     example: '+201234567890',
   })
   @IsPhoneNumber(undefined, {
-    message: 'Mobile number must be a valid phone number',
+    message: 'Mobile number must be a valid phone number with country code',
   })
   mobile_number: string;
 

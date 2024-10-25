@@ -60,7 +60,9 @@ export class UpdateMemberDto {
     example: '+201234567890',
   })
   @IsOptional()
-  @IsPhoneNumber()
+  @IsPhoneNumber(undefined, {
+    message: 'Mobile number must be a valid phone number with country code',
+  })
   mobile_number?: string;
 
   @ApiProperty({
