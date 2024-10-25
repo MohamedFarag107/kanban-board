@@ -1,24 +1,30 @@
 import toast from "react-hot-toast";
-import { CreateMember } from "../../api/members";
 import { ApiError } from "../../components/ApiError";
 import { Loader } from "../../components/loader";
 import { ScrollableArea } from "../../components/ScrollableArea";
 import {
   useCreateMemberMutation,
   useGetMembersQuery,
+  useUpdateMemberMutation,
 } from "../../hooks/use-member";
 import { KanbanBoard } from "./components/KanbanBoard";
 import { MemberForm, MemberFormValues } from "./components/MemberForm";
 import { UseFormReturn } from "react-hook-form";
+import { Modal } from "../../components/ui/Modal";
+import { useMember } from "../../context/member.context";
 
 export const HomePage = () => {
-  const { mutate, isPending: isCreatePending } = useCreateMemberMutation();
+  const { open, setOpen, setMember, member } = useMember();
+  const { mutate: createMember, isPending: isCreatePending } =
+    useCreateMemberMutation();
+  const { mutate: updateMember, isPending: isUpdatePending } =
+    useUpdateMemberMutation();
 
-  const onSubmit = (
-    member: CreateMember,
+  const onCreate = (
+    member: MemberFormValues,
     form: UseFormReturn<MemberFormValues>
   ) => {
-    mutate(member, {
+    createMember(member, {
       onError(error) {
         toast.error(error.message);
       },
@@ -29,6 +35,28 @@ export const HomePage = () => {
     });
   };
 
+  const onUpdate = (
+    { age, email, mobile_number, name, title }: MemberFormValues,
+    form: UseFormReturn<MemberFormValues>
+  ) => {
+    if (member) {
+      updateMember(
+        { id: member.id, payload: { age, email, mobile_number, name, title } },
+        {
+          onError(error) {
+            toast.error(error.message);
+          },
+          onSuccess() {
+            setOpen(false);
+            setMember(undefined);
+            toast.success("Member updated successfully");
+            form.reset();
+          },
+        }
+      );
+    }
+  };
+
   const { data = [], isPending, isError, error } = useGetMembersQuery();
 
   if (isPending) return <Loader fullScreen size={48} />;
@@ -36,13 +64,28 @@ export const HomePage = () => {
 
   return (
     <div className="min-h-screen p-5">
-      <header className="flex flex-col items-center justify-center text-2xl  mb-8">
+      <header
+        onClick={() => setOpen(true)}
+        className="flex flex-col items-center justify-center text-2xl  mb-8"
+      >
         <b>Kanban Board</b>
       </header>
-
+      <Modal
+        title="Create Member"
+        open={open && !!member}
+        onClose={() => setOpen(false)}
+      >
+        {member ? (
+          <MemberForm
+            member={member}
+            onSubmit={onUpdate}
+            isLoading={isUpdatePending}
+          />
+        ) : null}
+      </Modal>
       <div className="grid grid-cols-12 gap-5">
         <div className="col-span-12 lg:col-span-3">
-          <MemberForm onSubmit={onSubmit} isLoading={isCreatePending} />
+          <MemberForm onSubmit={onCreate} isLoading={isCreatePending} />
         </div>
         <ScrollableArea className="col-span-12 lg:col-span-9">
           <KanbanBoard members={data} />

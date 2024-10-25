@@ -7,14 +7,13 @@ import { Input } from "../../../components/ui/Input";
 import { useEffect } from "react";
 import { Button } from "../../../components/ui/Button";
 import { cn } from "../../../lib/utils";
-import { CreateMember } from "../../../api/members";
 
 interface BaseMemberFormProps {
   isLoading?: boolean;
 }
 interface CreateMemberFormProps extends BaseMemberFormProps {
   onSubmit: (
-    member: CreateMember,
+    member: MemberFormValues,
     form: UseFormReturn<MemberFormValues>
   ) => void;
   member?: undefined;
@@ -22,7 +21,7 @@ interface CreateMemberFormProps extends BaseMemberFormProps {
 interface UpdateMemberFormProps extends BaseMemberFormProps {
   member: Member;
   onSubmit: (
-    member: Partial<Member>,
+    member: MemberFormValues,
     form: UseFormReturn<MemberFormValues>
   ) => void;
 }
@@ -32,8 +31,8 @@ export const memberSchema = z.object({
   title: z.string().min(1, { message: "Title is too short" }),
   name: z.string().min(1, { message: "Name is too short" }),
   age: z
-    .string()
-    .transform((v) => +v)
+    .union([z.string(), z.number()])
+    .transform((v) => (typeof v === "string" ? +v : v))
     .refine((v) => !isNaN(v) && v > 0, { message: "Invalid Age" }),
   email: z.string().email(),
   mobile_number: z.string().min(1, { message: "Invalid Phone Number" }),

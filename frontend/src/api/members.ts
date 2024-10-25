@@ -8,6 +8,7 @@ export interface CreateMember {
   age: Member["age"];
   email: Member["email"];
   mobile_number: Member["mobile_number"];
+  status: Member["status"];
 }
 export const createMember = async (payload: CreateMember) => {
   try {

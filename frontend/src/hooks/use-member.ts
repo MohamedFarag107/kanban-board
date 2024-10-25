@@ -14,7 +14,6 @@ import { Member } from "../types/member";
 export const useCreateMemberMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: [QueryKey.Members],
     mutationFn: createMember,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -24,14 +23,14 @@ export const useCreateMemberMutation = () => {
   });
 };
 
-export const useUpdateMemberMutation = (id: number) => {
+export const useUpdateMemberMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: [QueryKey.Members, id],
-    mutationFn: (payload: Partial<Member>) => updateMember(id, payload),
+    mutationFn: ({ id, payload }: { id: number; payload: Partial<Member> }) =>
+      updateMember(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.Members, id],
+        queryKey: [QueryKey.Members],
       });
     },
   });
@@ -40,11 +39,10 @@ export const useUpdateMemberMutation = (id: number) => {
 export const useDeleteMemberMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: [QueryKey.Members, id],
     mutationFn: () => deleteMember(id),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.Members, id],
+        queryKey: [QueryKey.Members],
       });
     },
   });
@@ -53,7 +51,6 @@ export const useDeleteMemberMutation = (id: number) => {
 export const useReorderMembersMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: [QueryKey.Members],
     mutationFn: reorderMembers,
     onSuccess: () => {
       queryClient.invalidateQueries({

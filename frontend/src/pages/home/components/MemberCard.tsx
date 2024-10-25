@@ -5,6 +5,7 @@ import { cn } from "../../../lib/utils";
 import { useDeleteMemberMutation } from "../../../hooks/use-member";
 import toast from "react-hot-toast";
 import { clamp } from "../../../lib/clamp";
+import { useMember } from "../../../context/member.context";
 
 export interface MemberCardProps {
   member: Member;
@@ -12,7 +13,7 @@ export interface MemberCardProps {
 
 export const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
   const { mutate, isPending } = useDeleteMemberMutation(member.id);
-
+  const { setOpen, setMember } = useMember();
   const handleDelete = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     mutate(undefined, {
@@ -22,12 +23,18 @@ export const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
     });
   };
 
+  const handleUpdate = () => {
+    setMember(member);
+    setOpen(true);
+  };
+
   return (
     <div
       className={cn(
         "bg-white rounded-md space-y-2 p-3 relative group cursor-pointer",
         isPending && "opacity-50 pointer-events-none"
       )}
+      onClick={handleUpdate}
     >
       <div
         className={cn(
