@@ -67,10 +67,7 @@ export const HomePage = () => {
 
   return (
     <div className="min-h-screen p-5">
-      <header
-        onClick={() => setOpen(true)}
-        className="flex flex-col items-center justify-center text-2xl  mb-8"
-      >
+      <header className="flex flex-col items-center justify-center text-2xl  mb-8">
         <b>Kanban Board</b>
       </header>
       <Modal
