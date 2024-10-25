@@ -11,7 +11,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div>
         {label && (
-          <label className="block text-gray-700 text-sm font-bold mb-1">
+          <label className="block text-gray-700 text-sm font-bold mb-1 capitalize">
             {label}
           </label>
         )}

@@ -7,6 +7,7 @@ import { Input } from "../../../components/ui/Input";
 import { useEffect } from "react";
 import { Button } from "../../../components/ui/Button";
 import { cn } from "../../../lib/utils";
+import { Select } from "../../../components/ui/Select";
 
 interface BaseMemberFormProps {
   isLoading?: boolean;
@@ -101,6 +102,17 @@ export const MemberForm: React.FC<MemberFormProps> = ({
         placeholder="+201234567890"
         type="text"
       />
+
+      {member ? (
+        <Select
+          options={Object.values(Status).map((status) => ({
+            label: status,
+            value: status,
+          }))}
+          label="status"
+          {...form.register("status")}
+        />
+      ) : null}
 
       <Button
         error={Object.keys(form.formState.errors).length > 0}

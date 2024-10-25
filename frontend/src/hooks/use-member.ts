@@ -10,6 +10,7 @@ import {
   reorderMembers,
 } from "../api/members";
 import { Member } from "../types/member";
+import { Status } from "../types/board-status";
 
 export const useCreateMemberMutation = () => {
   const queryClient = useQueryClient();
@@ -71,5 +72,26 @@ export const useGetMembersQuery = () => {
   return useQuery({
     queryKey: [QueryKey.Members],
     queryFn: getMembers,
+  });
+};
+
+export const useGetMembersGroupByStatusQuery = () => {
+  return useQuery({
+    queryKey: [QueryKey.Members],
+    queryFn: getMembers,
+    select: (data) => {
+      const members: Record<string, Member[]> = {
+        [Status.UNCLAIMED]: [],
+        [Status.FIRST_CONTACT]: [],
+        [Status.PREPARING_WORK_OFFER]: [],
+        [Status.SEND_TO_THERAPIST]: [],
+      };
+
+      data.forEach((member) => {
+        members[member.status].push(member);
+      });
+
+      return members;
+    },
   });
 };

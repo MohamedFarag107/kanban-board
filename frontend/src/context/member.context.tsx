@@ -3,7 +3,7 @@ import { Member } from "../types/member";
 
 export interface MemberContextType {
   member?: Member;
-  setMember: (member?: Member) => void;
+  setMember: React.Dispatch<React.SetStateAction<Member | undefined>>;
   open: boolean;
   setOpen: (open: boolean) => void;
 }
@@ -21,6 +21,7 @@ export interface MemberProviderProps {
 
 export const MemberProvider: React.FC<MemberProviderProps> = ({ children }) => {
   const [member, setMember] = useState<Member | undefined>(undefined);
+
   const [open, setOpen] = useState(false);
 
   return (

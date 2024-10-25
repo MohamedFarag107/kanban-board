@@ -9,11 +9,13 @@ import { useMember } from "../../../context/member.context";
 
 export interface MemberCardProps {
   member: Member;
+  index: number;
 }
 
 export const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
   const { mutate, isPending } = useDeleteMemberMutation(member.id);
   const { setOpen, setMember } = useMember();
+
   const handleDelete = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     mutate(undefined, {
@@ -23,7 +25,8 @@ export const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
     });
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     setMember(member);
     setOpen(true);
   };
@@ -31,7 +34,7 @@ export const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
   return (
     <div
       className={cn(
-        "bg-white rounded-md space-y-2 p-3 relative group cursor-pointer",
+        "bg-white rounded-md space-y-2 p-3 relative group cursor-pointer select-none",
         isPending && "opacity-50 pointer-events-none"
       )}
       onClick={handleUpdate}

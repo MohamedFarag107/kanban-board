@@ -5,12 +5,12 @@ import { MemberCard } from "./MemberCard";
 
 export interface BoardProps {
   status: Status;
-
   members: Member[];
 }
 export const Board: React.FC<BoardProps> = ({ status, members }) => {
   const isUnclaimed = status === Status.UNCLAIMED;
   const count = members.length;
+
   return (
     <>
       <div
@@ -19,13 +19,13 @@ export const Board: React.FC<BoardProps> = ({ status, members }) => {
           !isUnclaimed && "bg-[#bad1e0]"
         )}
       >
-        <div className="flex justify-between items-center p-4">
+        <div className="flex justify-between items-center p-4 select-none">
           <h2 className="font-bold text-lg">{status}</h2>
           <span className="bg-white rounded-full px-3 font-bold">{count}</span>
         </div>
         <div className="space-y-4 min-h-[80vh] h-[80vh] max-h-[80vh] px-4 overflow-y-auto">
-          {members.map((member) => (
-            <MemberCard key={member.id} member={member} />
+          {members.map((member, index) => (
+            <MemberCard key={member.id} member={member} index={index} />
           ))}
         </div>
       </div>

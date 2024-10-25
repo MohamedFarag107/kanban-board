@@ -4,7 +4,7 @@ import { Loader } from "../../components/loader";
 import { ScrollableArea } from "../../components/ScrollableArea";
 import {
   useCreateMemberMutation,
-  useGetMembersQuery,
+  useGetMembersGroupByStatusQuery,
   useUpdateMemberMutation,
 } from "../../hooks/use-member";
 import { KanbanBoard } from "./components/KanbanBoard";
@@ -36,12 +36,15 @@ export const HomePage = () => {
   };
 
   const onUpdate = (
-    { age, email, mobile_number, name, title }: MemberFormValues,
+    { age, email, mobile_number, name, title, status }: MemberFormValues,
     form: UseFormReturn<MemberFormValues>
   ) => {
     if (member) {
       updateMember(
-        { id: member.id, payload: { age, email, mobile_number, name, title } },
+        {
+          id: member.id,
+          payload: { age, email, mobile_number, name, title, status },
+        },
         {
           onError(error) {
             toast.error(error.message);
@@ -57,7 +60,7 @@ export const HomePage = () => {
     }
   };
 
-  const { data = [], isPending, isError, error } = useGetMembersQuery();
+  const { data, isPending, isError, error } = useGetMembersGroupByStatusQuery();
 
   if (isPending) return <Loader fullScreen size={48} />;
   if (isError) return <ApiError error={error} />;
@@ -88,7 +91,7 @@ export const HomePage = () => {
           <MemberForm onSubmit={onCreate} isLoading={isCreatePending} />
         </div>
         <ScrollableArea className="col-span-12 lg:col-span-9">
-          <KanbanBoard members={data} />
+          <KanbanBoard data={data} />
         </ScrollableArea>
       </div>
     </div>
