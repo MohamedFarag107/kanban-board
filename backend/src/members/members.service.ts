@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Member } from './member.entity';
+import { Member, Status } from './member.entity';
 
 @Injectable()
 export class MembersService {
@@ -10,6 +10,13 @@ export class MembersService {
     @InjectRepository(Member)
     private readonly membersRepository: Repository<Member>,
   ) {}
+
+  getLastMemberOfStatus(status: Status): Promise<Member | null> {
+    return this.membersRepository.findOne({
+      where: { status },
+      order: { id: 'DESC' },
+    });
+  }
 
   create(memberData: Partial<Member>): Promise<Member> {
     const member = this.membersRepository.create(memberData);

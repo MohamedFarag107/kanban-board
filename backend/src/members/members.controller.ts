@@ -13,14 +13,18 @@ import {
 import { MembersService } from './members.service';
 import { Member } from './member.entity';
 import { CreateMemberDto } from './dto/create-member.dto';
+import { OrderHelper } from 'src/helper/order.helper';
 
 @Controller('members')
 export class MembersController {
-  constructor(private readonly membersService: MembersService) {}
+  constructor(
+    private readonly membersService: MembersService,
+    private readonly orderHelper: OrderHelper,
+  ) {}
 
   @Post()
   async create(@Body() memberData: CreateMemberDto): Promise<Member> {
-    const { email } = memberData;
+    const { email, status } = memberData;
 
     const member = await this.membersService.findMemberByEmail(email);
 
@@ -28,7 +32,10 @@ export class MembersController {
       throw new BadRequestException('Email Already Exists');
     }
 
-    return await this.membersService.create(memberData);
+    const lastMember = await this.membersService.getLastMemberOfStatus(status);
+    const order = this.orderHelper.generateKeyBetween(lastMember?.order, null);
+
+    return await this.membersService.create({ ...memberData, order });
   }
 
   @Get()
