@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, UseFormReturn } from "react-hook-form";
 import { Member } from "../../../types/member";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,11 +6,27 @@ import { Status } from "../../../types/board-status";
 import { Input } from "../../../components/ui/Input";
 import { useEffect } from "react";
 import { Button } from "../../../components/ui/Button";
+import { cn } from "../../../lib/utils";
+import { CreateMember } from "../../../api/members";
 
-export interface MemberFormProps {
-  member?: Member;
-  onSubmit: (member: Partial<Member>) => void;
+interface BaseMemberFormProps {
+  isLoading?: boolean;
 }
+interface CreateMemberFormProps extends BaseMemberFormProps {
+  onSubmit: (
+    member: CreateMember,
+    form: UseFormReturn<MemberFormValues>
+  ) => void;
+  member?: undefined;
+}
+interface UpdateMemberFormProps extends BaseMemberFormProps {
+  member: Member;
+  onSubmit: (
+    member: Partial<Member>,
+    form: UseFormReturn<MemberFormValues>
+  ) => void;
+}
+export type MemberFormProps = CreateMemberFormProps | UpdateMemberFormProps;
 
 export const memberSchema = z.object({
   title: z.string().min(1, { message: "Title is too short" }),
@@ -26,7 +42,11 @@ export const memberSchema = z.object({
 
 export type MemberFormValues = z.infer<typeof memberSchema>;
 
-export const MemberForm: React.FC<MemberFormProps> = ({ member, onSubmit }) => {
+export const MemberForm: React.FC<MemberFormProps> = ({
+  member,
+  onSubmit,
+  isLoading,
+}) => {
   const form = useForm<MemberFormValues>({
     defaultValues: member,
     resolver: zodResolver(memberSchema),
@@ -40,7 +60,9 @@ export const MemberForm: React.FC<MemberFormProps> = ({ member, onSubmit }) => {
 
   return (
     <form
-      onSubmit={form.handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit((values) => {
+        onSubmit(values, form);
+      })}
       className={"flex flex-col gap-4 w-full"}
     >
       <Input
@@ -84,6 +106,8 @@ export const MemberForm: React.FC<MemberFormProps> = ({ member, onSubmit }) => {
       <Button
         error={Object.keys(form.formState.errors).length > 0}
         type="submit"
+        disabled={isLoading}
+        className={cn(isLoading && "opacity-50 pointer-events-none")}
       >
         {member ? "Update Member" : "Add Member"}
       </Button>

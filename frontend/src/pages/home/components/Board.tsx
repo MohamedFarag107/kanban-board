@@ -5,11 +5,12 @@ import { MemberCard } from "./MemberCard";
 
 export interface BoardProps {
   status: Status;
-  count: number;
+
   members: Member[];
 }
-export const Board: React.FC<BoardProps> = ({ status, count, members }) => {
+export const Board: React.FC<BoardProps> = ({ status, members }) => {
   const isUnclaimed = status === Status.UNCLAIMED;
+  const count = members.length;
   return (
     <>
       <div

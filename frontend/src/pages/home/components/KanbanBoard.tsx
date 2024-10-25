@@ -3,27 +3,14 @@ import { Status } from "../../../types/board-status";
 import { Board } from "./Board";
 import { Member } from "../../../types/member";
 
-export const KanbanBoard = () => {
+export interface KanbanBoardProps {
+  members: Member[];
+}
+
+export const KanbanBoard: React.FC<KanbanBoardProps> = ({ members }) => {
   const boards = useMemo(() => {
     return Object.values(Status);
   }, []);
-  const count = {
-    [Status.UNCLAIMED]: 12,
-    [Status.FIRST_CONTACT]: 11,
-    [Status.PREPARING_WORK_OFFER]: 33,
-    [Status.SEND_TO_THERAPIST]: 45,
-  };
-
-  const members: Member[] = Array.from({ length: 50 }).map((_, index) => ({
-    age: 20 + index,
-    name: `Mohamed`,
-    title: `Mr`,
-    email: `mofarag@gmail.com`,
-    id: index,
-    mobile_number: `+201069980459`,
-    order: `order-${index}`,
-    status: boards[index % boards.length],
-  }));
 
   return (
     <div>
@@ -33,7 +20,6 @@ export const KanbanBoard = () => {
             <Board
               key={status}
               status={status}
-              count={count[status]}
               members={members.filter((member) => member.status === status)}
             />
           ))}
