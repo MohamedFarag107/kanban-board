@@ -6,6 +6,8 @@ import {
   IsEnum,
   IsPhoneNumber,
   IsOptional,
+  Min,
+  Max,
 } from 'class-validator';
 import { Status } from '../member.entity';
 import { ApiProperty } from '@nestjs/swagger';
@@ -41,6 +43,8 @@ export class UpdateMemberDto {
   })
   @IsOptional()
   @IsNumber()
+  @Min(1)
+  @Max(150)
   age?: number;
 
   @ApiProperty({

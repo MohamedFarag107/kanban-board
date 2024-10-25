@@ -64,8 +64,13 @@ export class MembersController {
     const { status, email } = updateData;
     const data: Partial<Member> = updateData;
 
-    // if the status is changed, we need to reorder the members
-    if (status) {
+    const member = await this.membersService.findOneById(+id);
+
+    if (!member) {
+      throw new NotFoundException('Member not found');
+    }
+
+    if (status && status !== member.status) {
       const lastMember =
         await this.membersService.getLastMemberOfStatus(status);
       const order = this.orderHelper.generateKeyBetween(
@@ -75,24 +80,16 @@ export class MembersController {
       data.order = order;
     }
 
-    // if the email is changed, we need to check if the email already exists
-    if (email) {
-      const canUseEmail = await this.membersService.canUseEmail(email, +id);
-
-      if (!canUseEmail) {
+    if (email && email !== member.email) {
+      const member = await this.membersService.findMemberByEmail(email);
+      if (member) {
         throw new BadRequestException(
           'Cannot use this email because someone already uses it',
         );
       }
     }
 
-    const member = await this.membersService.update(+id, data);
-
-    if (!member) {
-      throw new NotFoundException('Member not found');
-    }
-
-    return member;
+    return this.membersService.update(+id, data);
   }
 
   @Put('/reorder/:id')
@@ -121,8 +118,6 @@ export class MembersController {
     if (bottomMemberId && !bottomMember) {
       throw new NotFoundException('Bottom Member not found');
     }
-
-    console.log(topMember?.order, member.order, bottomMember?.order);
 
     const newMemberOrder = this.orderHelper.generateKeyBetween(
       topMember?.order,

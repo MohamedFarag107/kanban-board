@@ -62,11 +62,4 @@ export class MembersService {
   findMemberByEmail(email: string): Promise<Member | null> {
     return this.membersRepository.findOne({ where: { email } });
   }
-
-  async canUseEmail(email: string, id: number): Promise<boolean> {
-    const member = await this.membersRepository.findOne({ where: { email } });
-    if (!member) return true;
-    if (member.id === id) return true;
-    return false;
-  }
 }

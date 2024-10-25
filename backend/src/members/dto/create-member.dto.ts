@@ -5,6 +5,8 @@ import {
   IsNumber,
   IsEnum,
   IsPhoneNumber,
+  Min,
+  Max,
 } from 'class-validator';
 import { Status } from '../member.entity';
 import { ApiProperty } from '@nestjs/swagger';
@@ -37,6 +39,8 @@ export class CreateMemberDto {
     example: 30,
   })
   @IsNumber()
+  @Min(1)
+  @Max(150)
   age: number;
 
   @ApiProperty({
