@@ -1,103 +1,93 @@
-# Kanban Board Bookings
+# Kanban Board
 
-Thank you for taking the time to do this exercise. If you enjoy the exercise and would like to continue, we would be delighted to interview. We will spend the first part of your interview discussing this work.
+This project is a Kanban board application designed to help an online mental health clinic track new member bookings. The application was built using ReactJS with TypeScript for the frontend, NestJS for the backend, and PostgreSQL with TypeORM for data persistence. Tailwind CSS was used for styling to maintain a clean and responsive user interface.
 
-Please upload your final work on a public repository and include the url inside the email
+## Author
 
-**Note**: Git history will be checked so make sure you write meaningful commit messages.
+- [Mohamed Farag](https://github.com/MohamedFarag107)
 
-## Brief: Kanban Board Bookings
+## Demo
 
-An online mental health clinic is building a new board to allow its operations team to keep track of new bookings. They have a basic form to enter the member's details onto the board:
+- [frontend](https://mfarag.me)
+- [backend swagger](https://api.mfarag.me/api/v1/swagger)
 
-- Name
-- Title
-- Age
-- Email
-- Mobile Number
+## Features
 
-The board has 4 columns:
+- Form Validation: Validations are implemented for each form field (Name, Title, Age, Email, Mobile Number) to ensure data correctness.
+- CRUD Operations: Allows creating, reading, updating, and deleting member cards on the Kanban board.
+- Card Status Management: Ability to move cards between different board columns.
+- SQL Database Persistence: Data is stored in a PostgreSQL database for persistence.
+- Column Card Count: Displays dynamic counts for each column.
+- Additional Ordering Endpoint: Allows ordering of cards within the same or across different columns (documented in Swagger).
+- Clean Styling: A responsive and user-friendly interface using Tailwind CSS.
 
-- **Unclaimed**: new cases
-- **First Contact**: operations team contact member
-- **Preparing Work Offer**: searching for Therapist
-- **Send to Therapist**: matched with Therapist
+# How To Get Started
 
-This is what the board currently looks like:
-![initial-board](public/initial-board.png)
+<!-- pre requirement -->
 
-## How to Start
+## Pre Requirement
 
-This is a simple create-react-app application, and we are using ReactJS with TypeScript and Tailwind CSS for styling.
+### Install `win-node-env` globally if you are using Windows
 
-For the backend, we are using **NestJS** for building the server-side application. NestJS is a progressive Node.js framework for building efficient, reliable, and scalable server-side applications. You are expected to use NestJS for handling API requests, managing the database, and business logic.
+```bash
+npm install -g win-node-env
+```
 
-## Instructions to run the project
+### Run Docker Container for PostgreSQL or you can use your own PostgreSQL
 
-### Backend
+```bash
+docker run --name kanban_board -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+```
 
-1. Run npm install to install the necessary dependencies.
-2. Run npm run start:dev to start the development server.
-3. Open your browser and navigate to http://localhost:3000.
+### Create `.env.development` for development and `.env.production` for production:
 
-### Frontend
+## .env.development for Backend
 
-1. Run npm install to install the necessary dependencies.
-2. Run npm run start:dev to start the development server.
-3. Open your browser and navigate to http://localhost:5173.
+```bash
+PORT=3000
+NODE_ENV="development"
+DB_HOST= "localhost"
+DB_PORT= 5432
+DB_USER_NAME= "postgres"
+DB_PASSWORD= "postgres"
+DB_NAME= "postgres"
+CLIENT_ORIGIN= "http://localhost:3000"
+```
 
-You are required to use Tailwind CSS for styling throughout the project. Please do not use any other CSS frameworks or libraries like styled-components.
+## .env.development for Frontend
 
-## Tasks
+```bash
+VITE_SERVER_URL=http://localhost:3000
+```
 
-1. **Member Form Validations**
+### Install Dependencies (Frontend & Backend)
 
-   - Implement form validations for each field (Name, Title, Age, Email, and Mobile Number) to ensure that correct data is entered.
-   - Display relevant error and helper messages for invalid or missing inputs.
+```bash
+npm i
+```
 
-2. **Create New Member Card**
+### Run Development (Frontend)
 
-   - Upon submitting the form, create a new card with the entered details and place it in the _Unclaimed_ column.
+```bash
+npm dev
+```
 
-3. **CRUD Operations on Member Cards**
+### Run Development (Backend)
 
-   - Implement full CRUD (Create, Read, Update, Delete) functionality for member cards.
-     - **Create:** Add new member cards to the board.
-     - **Read:** Display the details of each member card.
-     - **Update:** Allow editing of card details.
-     - **Delete:** Enable the removal of member cards from the board.
+```bash
+yarn start:dev
+```
 
-4. **Card Status Management**
+### Run Production (Frontend)
 
-   - Add functionality to update the status of each card by moving it between different columns (_Unclaimed_, _First Contact_, _Preparing Work Offer_, and _Send to Therapist_).
-   - **_BONUS_** Implement drag-and-drop functionality to allow users to easily change the status of a card by dragging it between columns.
+```bash
+yarn build
+npm run preview
+```
 
-5. **Persistent Data with SQL Database**
+### Run Production (Backend)
 
-   - Save all member card data to _SQL Database_ so that the board retains the cards even after a page reload.
-   - Reload and display previously entered cards from _SQL Database_ when the page is refreshed.
-
-6. **Column Card Count**
-
-   - Each column should display the number of member cards it contains, updating dynamically as cards are added, deleted, or moved.
-
-7. **Styling**
-   - Style the member form, card components, and board using **Tailwind CSS**.
-   - Ensure the page has a clean and user-friendly design, with a focus on usability and aesthetics.
-
-8. **Documentation**
-   The backend should have a swagger documentation of the implemented APIs.
-
-## Constraints
-
-1. Email should be unique.
-2. Mobile number should accept any phone number from any country not just egypt
-
-## Review Interview
-
-Once we have received your repository we will organize a follow-up interview to discuss your solution.
-
-If you don't have time, that's fine. During the interview, we will discuss strategies that you might have used to achieve these.
-
-The final design of the board should look like this:
-![final-board](public/final-board.png)
+```bash
+npm run build
+npm run start:prod
+```
