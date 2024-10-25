@@ -12,10 +12,11 @@ export class MembersService {
   ) {}
 
   getLastMemberOfStatus(status: Status): Promise<Member | null> {
-    return this.membersRepository.findOne({
-      where: { status },
-      order: { id: 'DESC' },
-    });
+    return this.membersRepository
+      .createQueryBuilder('member')
+      .where('member.status = :status', { status })
+      .orderBy(`member.order COLLATE "C"`, 'DESC')
+      .getOne();
   }
 
   create(memberData: Partial<Member>): Promise<Member> {
@@ -24,7 +25,11 @@ export class MembersService {
   }
 
   findAll(): Promise<Member[]> {
-    return this.membersRepository.find();
+    return this.membersRepository
+      .createQueryBuilder('member')
+      .orderBy('member.status', 'ASC')
+      .addOrderBy(`member.order COLLATE "C"`, 'ASC')
+      .getMany();
   }
 
   findOneById(id: number): Promise<Member | null> {
@@ -56,5 +61,12 @@ export class MembersService {
 
   findMemberByEmail(email: string): Promise<Member | null> {
     return this.membersRepository.findOne({ where: { email } });
+  }
+
+  async canUseEmail(email: string, id: number): Promise<boolean> {
+    const member = await this.membersRepository.findOne({ where: { email } });
+    if (!member) return true;
+    if (member.id === id) return true;
+    return false;
   }
 }
