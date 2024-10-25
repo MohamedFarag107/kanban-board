@@ -54,7 +54,9 @@ export class CreateMemberDto {
     required: true,
     example: '+201234567890',
   })
-  @IsPhoneNumber()
+  @IsPhoneNumber(undefined, {
+    message: 'Mobile number must be a valid phone number',
+  })
   mobile_number: string;
 
   @ApiProperty({
