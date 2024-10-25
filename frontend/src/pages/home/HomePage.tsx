@@ -71,7 +71,7 @@ export const HomePage = () => {
         <b>Kanban Board</b>
       </header>
       <Modal
-        title="Create Member"
+        title="Update Member"
         open={open && !!member}
         onClose={() => setOpen(false)}
       >
